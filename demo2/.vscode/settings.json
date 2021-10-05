@@ -1,0 +1,4 @@
+{
+    "docker.dockerComposeBuild": true,
+    "docker.dockerComposeDetached": true
+}

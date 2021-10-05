@@ -1,0 +1,87 @@
+version: "3.7"
+
+services:
+  ##### MongoDB #####
+  mongodb:
+    container_name: mongo_service
+    image: mongo:4.4
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+      - MONGO_INITDB_DATABASE=contosocrafts
+    volumes:
+      - ./productdata/products.json:/data/products.json
+      - ./productdata/populate.sh:/docker-entrypoint-initdb.d/populate.sh
+      - ./contoso_tmp/mongo/data/db:/data/db
+    ports:
+      - "27017:27017"
+
+  ##### Rabbitmq #####
+  rabbitmq:
+    image: "rabbitmq:3.9-management"
+    container_name: "rabbitmq_server"
+    hostname: "rabbitmq_server"
+    environment:
+      - RABBITMQ_DEFAULT_USER=demo
+      - RABBITMQ_DEFAULT_PASS=demo
+      - RABBITMQ_ERLANG_COOKIE=demo_cookie_1234
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  ##### Redis #####
+  redis:
+    container_name: "redis_service"
+    image: "redis:6.2-alpine"
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+ 
+  ##### Zipkin #####
+  zipkin:
+    container_name: "zipkin_service"
+    image: "openzipkin/zipkin:2.23.2"
+    ports:
+      - 9411:9411
+
+  ##### fluent-bit #####
+  fluent-bit:
+    image: fluent/fluent-bit:1.7.2
+    container_name: "fluentbit_service"
+    hostname: "fluentbit_service"
+    depends_on:
+      - seq-input-gelf
+    ports:
+      - 24224:24224 # Forward input plugin
+      - 24220:24220 # built-in HTTP Server
+    volumes:
+      - "./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf:ro"
+
+  ##### Seq #####
+  seq:
+    container_name: "seq_service"
+    image: datalust/seq:2021.2
+    environment:
+      - ACCEPT_EULA=Y
+    volumes:
+      - ./contoso_tmp/seq/data:/data
+    ports:
+      - "8191:80"
+
+  seq-input-gelf:
+    image: datalust/seq-input-gelf:latest
+    container_name: "seq-input-gelf"
+    depends_on:
+      - seq
+    ports:
+      - "12201:12201/udp"
+    environment:
+      SEQ_ADDRESS: "http://seq_service:5341"
+    restart: unless-stopped
+
+networks:
+  default:
+    name: dapr_network
+    driver: bridge

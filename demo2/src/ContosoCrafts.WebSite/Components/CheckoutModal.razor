@@ -1,0 +1,82 @@
+@inject IHttpClientFactory ClientFactory
+@inject EventAggregator.Blazor.IEventAggregator Aggregator
+@implements EventAggregator.Blazor.IHandle<CheckoutStarted>
+
+<div class="modal fade" id="checkoutModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Checkout</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                      <table class="table table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                            <th>Title</th>
+                            <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if(Items != null){
+                                @foreach (var item in Items)
+                                {
+                                    <tr>
+                                    <td>@item.Title</td>
+                                    <td>@item.Quantity</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                 <button class="btn btn-primary"  data-toggle="modal" data-target="#checkoutModal" @onclick="(e => SubmitCheckout())">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {    
+    IEnumerable<CartItem> Items { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Aggregator.Subscribe(this);
+    }
+    public async Task HandleAsync(CheckoutStarted cartUpdated)
+    {
+        // get state
+        var client = ClientFactory.CreateClient("dapr");
+        var resp = await client.GetAsync($"v1.0/state/{Constants.STORE_NAME}/cart");
+
+        if (!resp.IsSuccessStatusCode || resp.StatusCode == HttpStatusCode.NoContent) return;
+
+        var responseBody = await resp.Content.ReadAsStringAsync();
+        var state = JsonSerializer.Deserialize<Dictionary<string, CartItem>>(responseBody);
+        Items = state.Values;
+        StateHasChanged();
+    }
+
+    protected async Task SubmitCheckout()
+    {
+        if (Items == null || !Items.Any()) return;
+
+        var client = ClientFactory.CreateClient("dapr");
+        var resp = await client.DeleteAsync($"v1.0/state/{Constants.STORE_NAME}/cart");
+
+        var payload = JsonSerializer.Serialize(Items);
+        var content = new StringContent(payload, Encoding.UTF8, "application/json");
+        await client.PostAsync($"v1.0/publish/{Constants.PUBSUB_NAME}/checkout", content);
+
+        Items = null;
+        await Aggregator.PublishAsync(new ShoppingCartUpdated { ItemCount = 0 });
+        StateHasChanged();
+    }
+}

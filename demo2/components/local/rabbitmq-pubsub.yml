@@ -1,0 +1,16 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: rabbitmqbus
+  namespace: default
+spec:
+  type: pubsub.rabbitmq
+  metadata:
+  - name: host
+    value: "amqp://demo:demo@rabbitmq_server:5672/"
+  - name: consumerID
+    value: "contoso_dapr_rabbit"
+  - name: durable
+    value: "false"
+  - name: deletedWhenUnused
+    value: "false"

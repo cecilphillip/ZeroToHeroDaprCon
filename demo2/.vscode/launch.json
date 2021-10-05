@@ -1,0 +1,82 @@
+{
+    // Use IntelliSense to find out which attributes exist for C# debugging
+    // Use hover for the description of the existing attributes
+    // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Docker Website Attach",
+            "type": "docker",
+            "request": "attach",
+            "platform": "netCore",
+            "containerName": "contoso_website",
+            "sourceFileMap": {
+                "/src": "${workspaceFolder}/src/ContosoCrafts.WebSite"
+            }
+        },
+        {
+            "name": "Docker API Attach",
+            "type": "docker",
+            "request": "attach",
+            "platform": "netCore",
+            "sourceFileMap": {
+                "/src": "${workspaceFolder}/src/ContosoCrafts.ProductsApi"
+            }
+        },
+        {
+            "name": "Docker CheckoutProcessor Attach",
+            "type": "docker",
+            "request": "attach",
+            "platform": "netCore",
+            "sourceFileMap": {
+                "/src": "${workspaceFolder}/src/ContosoCrafts.CheckoutProcessor"
+            }
+        },
+        {
+            "name": "Debug ContosoCrafts.WebSite",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build website",
+            "program": "${workspaceFolder}/src/ContosoCrafts.WebSite/bin/Debug/netcoreapp3.1/ContosoCrafts.WebSite.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/ContosoCrafts.WebSite",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": "Debug ContosoCrafts.ProductsApi",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build api",
+            "program": "${workspaceFolder}/src/ContosoCrafts.ProductsApi/bin/Debug/netcoreapp3.1/ContosoCrafts.ProductsApi.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/ContosoCrafts.ProductsApi",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": "Local .NET Core Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
+        }
+    ]
+}

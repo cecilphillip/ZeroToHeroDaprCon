@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "ms-dotnettools.csharp",
+        "ms-azuretools.vscode-docker",
+        "ms-azuretools.vscode-dapr",
+        "mongodb.mongodb-vscode"
+    ]
+}

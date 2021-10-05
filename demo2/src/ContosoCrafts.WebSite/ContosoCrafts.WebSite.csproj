@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>b4134c343f8cdcc6dad62b019119e260</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="EventAggregator.Blazor" Version="2.0.0" />
+  </ItemGroup>
+</Project>

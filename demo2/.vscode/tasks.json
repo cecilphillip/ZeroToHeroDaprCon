@@ -1,0 +1,153 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/ContosoCrafts.sln",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build website",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/ContosoCrafts.WebSite/ContosoCrafts.WebSite.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish webite",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/src/ContosoCrafts.WebSite/ContosoCrafts.WebSite.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build api",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/ContosoCrafts.ProductsApi/ContosoCrafts.ProductsApi.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish api",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/src/ContosoCrafts.ProductsApi/ContosoCrafts.ProductsApi.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "type": "docker-build",
+            "label": "docker-build: website debug",
+            "dependsOn": [
+                "build"
+            ],
+            "dockerBuild": {
+                "tag": "contosocrafts:dev",
+                "target": "base",
+                "dockerfile": "${workspaceFolder}/src/ContosoCrafts.WebSite/Dockerfile",
+                "context": "${workspaceFolder}/src/ContosoCrafts.WebSite",
+                "pull": true
+            },
+            "netCore": {
+                "appProject": "${workspaceFolder}/src/ContosoCrafts.WebSite/ContosoCrafts.WebSite.csproj"
+            }
+        },
+        {
+            "type": "docker-build",
+            "label": "docker-build: website release",
+            "dependsOn": [
+                "build"
+            ],
+            "dockerBuild": {
+                "tag": "contosocrafts:latest",
+                "dockerfile": "${workspaceFolder}/src/ContosoCrafts.WebSite/Dockerfile",
+                "context": "${workspaceFolder}/src/ContosoCrafts.WebSite",
+                "pull": true
+            },
+            "netCore": {
+                "appProject": "${workspaceFolder}/src/ContosoCrafts.WebSite/ContosoCrafts.WebSite.csproj"
+            }
+        },
+        {
+            "type": "docker-build",
+            "label": "docker-build: api release",
+            "dependsOn": [
+                "build"
+            ],
+            "dockerBuild": {
+                "tag": "contosocrafts_api:latest",
+                "dockerfile": "${workspaceFolder}/src/ContosoCrafts.ProductsApi/Dockerfile",
+                "context": "${workspaceFolder}/src/ContosoCrafts.ProductsApi",
+                "pull": true
+            },
+            "netCore": {
+                "appProject": "${workspaceFolder}/src/ContosoCrafts.ProductsApi/ContosoCrafts.ProductsApi.csproj"
+            }
+        },
+        {
+            "type": "docker-run",
+            "label": "docker-run: website debug",
+            "dependsOn": [
+                "docker-build: website debug"
+            ],
+            "dockerRun": {
+                "volumes": [
+                    {
+                        "localPath": "/Users/cecilphillip/.aspnet/https",
+                        "containerPath": "/https",
+                        "permissions": "ro"
+                    }
+                ]
+            },
+            "netCore": {
+                "appProject": "${workspaceFolder}/src/ContosoCrafts.WebSite/ContosoCrafts.WebSite.csproj",
+                "enableDebugging": true
+            }
+        },
+        {
+            "type": "docker-run",
+            "label": "docker-run: website release",
+            "dependsOn": [
+                "docker-build: website release"
+            ],
+            "dockerRun": {
+                "volumes": [
+                    {
+                        "localPath": "/Users/cecilphillip/.aspnet/https",
+                        "containerPath": "/https",
+                        "permissions": "ro"
+                    }
+                ]
+            },
+            "netCore": {
+                "appProject": "${workspaceFolder}/src/ContosoCrafts.WebSite/ContosoCrafts.WebSite.csproj"
+            }
+        }
+    ]
+}

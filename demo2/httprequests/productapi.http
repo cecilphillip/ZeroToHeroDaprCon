@@ -1,0 +1,19 @@
+@host = http://localhost:81
+
+### Get Products
+GET {{host}}/products
+Accept: application/json
+
+### Get single product
+GET {{host}}/products/jenlooper-light
+Accept: application/json
+
+### update product rating
+PATCH {{host}}/products
+Accept: application/json
+Content-Type: application/json
+
+{
+    "productId" : "jenlooper-light",
+    "rating" : 5
+}

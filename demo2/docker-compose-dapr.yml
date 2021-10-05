@@ -1,0 +1,115 @@
+version: "3.7"
+
+x-logging: &default-logging
+  driver: "fluentd"
+  options:
+    fluentd-address: "localhost:24224"
+    fluentd-async-connect: "true"
+    tag: "{{.Name}}-{{.ID}}"
+
+services:
+  ##### Website & DAPR Sidecar #####
+  website:
+    build:
+      context: ./src/ContosoCrafts.WebSite
+      dockerfile: Dockerfile
+    container_name: contoso_website
+    env_file:
+      - .env
+    ports:
+      - "80:80"
+    logging: *default-logging
+
+  website_dapr:
+    image: "daprio/daprd:1.2.2"
+    command:
+      [
+        "./daprd",
+        "-app-id",
+        "website",
+        "-app-port",
+        "80",
+        "-config",
+        "/dapr/config.yaml",
+        "-components-path",
+        "/dapr/local",
+      ]
+    volumes:
+      - "./components:/dapr"      
+    depends_on:
+      - website
+    network_mode: "service:website"
+    env_file:
+      - .env
+    logging: *default-logging
+
+  ##### API & DAPR Sidecar #####
+  productsapi:
+    build:
+      context: ./src/ContosoCrafts.ProductsApi
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "81:80"
+    logging: *default-logging
+
+  productsapi_dapr:
+    image: "daprio/daprd:1.2.2"
+    command:
+      [
+        "./daprd",
+        "-app-id",
+        "productsapi",
+        "-app-port",
+        "80",
+        "-config",
+        "/dapr/config.yaml",
+        "-components-path",
+        "/dapr/local",
+      ]
+    volumes:
+      - "./components:/dapr"
+    depends_on:
+      - productsapi
+    network_mode: "service:productsapi"
+    env_file:
+      - .env
+    logging: *default-logging
+
+  ##### Checkout Processor & DAPR Sidecar #####
+  checkoutprocessor:
+    build:
+      context: ./src/ContosoCrafts.CheckoutProcessor
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    logging: *default-logging
+
+  checkoutprocessor_dapr:
+    image: "daprio/daprd:1.2.2"
+    command:
+      [
+        "./daprd",
+        "-app-id",
+        "checkoutprocessor",
+        "-app-port",
+        "80",
+        "-config",
+        "/dapr/config.yaml",
+        "-components-path",
+        "/dapr/local",
+      ]
+    volumes:
+      - "./components:/dapr"
+    depends_on:      
+      - checkoutprocessor
+    env_file:
+      - .env
+    network_mode: "service:checkoutprocessor"
+    logging: *default-logging
+
+networks:
+  default:
+    external:
+      name: dapr_network
