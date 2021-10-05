@@ -9,7 +9,7 @@ You'll need to have the follow installed to propperly run the demo.
 
 ## Spinning up the environment
 
-First, spin up the supporting [#Infrastructure-Components]
+First, spin up the supporting [#Infrastructure-Components]. Run these commands in the demo2 root directory.
 
 ```bash
 > docker-compose -f docker-compose-infra.yml up -d

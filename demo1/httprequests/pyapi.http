@@ -1,0 +1,12 @@
+@host = http://localhost:3500
+
+### Get API Status
+GET {{host}}/
+Accept: application/json
+dapr-app-id: api
+
+
+### Say Hello
+GET {{host}}/hello?name=Cecil
+Accept: application/json
+dapr-app-id: api
