@@ -15,14 +15,16 @@ open ContosoCrafts.ProductsApi.Services;
 // [<CLIMutable>]
 type RatingRequest = {ProductId: string; Rating: int}
 
-[ApiController]
-[Route("[controller]")]
+[<ApiController>]
+[<Route("[controller]")>]
 type ProductsController(productService: IProductService) =
     inherit ControllerBase()
 
     [<HttpGet>]
     // public async Task<ActionResult> GetList(int page = 1, int limit = 20)
-    member this.GetList(page = 1, limit = 20) : Task<IActionResult> =
+    member this.GetList(?page, ?limit) : Task<IActionResult> =
+        let page = defaultArg page 1
+        let limit = defaultArg limit 20
 #if FSHARP6
         task{
             let! result = productService.GetProducts(page, limit);
@@ -30,7 +32,7 @@ type ProductsController(productService: IProductService) =
         }
 #else
         async {
-            let! result = productService.GetProducts(page,limit);
+            let! result = Async.AwaitTask(productService.GetProducts(PagingInfo(page,limit)));
             return this.Ok(result) :> IActionResult
         }
         |> Async.StartAsTask
@@ -54,7 +56,7 @@ type ProductsController(productService: IProductService) =
 
     [<HttpPatch>]
     // public async Task<ActionResult> Patch(RatingRequest request)
-    member this.Patch(request:RatingRequest): IActionResult =
+    member this.Patch(request:RatingRequest): Task<IActionResult> =
 #if FSHARP6
         task{
             do! productService.AddRating(request.ProductId, request.Rating);
@@ -63,7 +65,7 @@ type ProductsController(productService: IProductService) =
 #else
         async {
             do! Async.AwaitTask(productService.AddRating(request.ProductId, request.Rating));
-            return Ok() :> IActionResult;
+            return this.Ok() :> IActionResult;
         }
         |> Async.StartAsTask
 #endif

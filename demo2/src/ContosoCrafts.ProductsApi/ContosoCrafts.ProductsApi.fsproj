@@ -7,10 +7,11 @@
 
   <ItemGroup>
     <Compile Include="Models\Product.fs" />
-    <Compile Include="Services\*.fs" />
+    <Compile Include="Services\ProductService.fs" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Controllers\ProductsController.fs" />
     <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
