@@ -23,16 +23,24 @@ type ProductsController(productService: IProductService) =
     [<HttpGet>]
     // public async Task<ActionResult> GetList(int page = 1, int limit = 20)
     member this.GetList(?page, ?limit) : Task<IActionResult> =
-        let page = defaultArg page 1
-        let limit = defaultArg limit 20
+        let pagingInfo =
+            match page, limit with
+            | Some page, Some limit ->
+                PagingInfo(page, limit)
+            | Some page, None ->
+                PagingInfo(page)
+            | None, Some limit ->
+                PagingInfo(limit= limit)
+            | None, None ->
+                PagingInfo()
 #if FSHARP6
         task{
-            let! result = productService.GetProducts(page, limit);
+            let! result = productService.GetProducts(pagingInfo);
             return this.Ok(result) :> IActionResult;
         }
 #else
         async {
-            let! result = Async.AwaitTask(productService.GetProducts(PagingInfo(page,limit)));
+            let! result = Async.AwaitTask(productService.GetProducts(pagingInfo));
             return this.Ok(result) :> IActionResult
         }
         |> Async.StartAsTask
