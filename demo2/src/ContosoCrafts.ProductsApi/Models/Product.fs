@@ -10,7 +10,7 @@ type Product() =
     [<BsonElement("_id")>]
     [<JsonIgnore>]
     [<BsonRepresentation(BsonType.ObjectId)>]
-    member val RecId = null with get,set
+    member val RecId : string = null with get,set
 
     [<BsonRepresentation(BsonType.String)>]
     [<BsonElement("Id")>]
