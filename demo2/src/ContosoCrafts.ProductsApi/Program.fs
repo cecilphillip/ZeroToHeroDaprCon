@@ -1,20 +1,18 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+module ContosoCrafts.ProductsApi.Program
 
-namespace ContosoCrafts.ProductsApi
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+open Microsoft.AspNetCore.Hosting;
+open Microsoft.Extensions.Hosting;
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
-}
+
+// public static IHostBuilder createHostBuilder(string[] args) =>
+let createHostBuilder (args: string[]): IHostBuilder =
+    Host.CreateDefaultBuilder(args)
+        .ConfigureWebHostDefaults(fun webBuilder ->
+            webBuilder.UseStartup<Startup>()
+            |> ignore
+        );
+
+[<EntryPoint>]
+let main(args: string[]) =
+    createHostBuilder(args).Build().Run();
+    0

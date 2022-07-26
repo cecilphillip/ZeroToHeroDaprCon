@@ -1,45 +1,69 @@
-﻿using System.Threading.Tasks;
-using ContosoCrafts.ProductsApi.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿namespace ContosoCrafts.ProductsApi.Controllers
 
-namespace ContosoCrafts.ProductsApi.Controllers
-{
-    [ApiController]
-    [Route("[controller]")]
-    public class ProductsController : ControllerBase
-    {
-        public ProductsController(IProductService productService)
-        {
-            _productService = productService;
+open System.Threading.Tasks;
+open Microsoft.AspNetCore.Mvc;
+
+open ContosoCrafts.ProductsApi.Services;
+// public class RatingRequest
+// {
+//     public string ProductId { get; set; }
+//     public int Rating { get; set; }
+// }
+
+// assuming the framework will be ok with immutables here
+// if not uncomment the attribute and try that
+// [<CLIMutable>]
+type RatingRequest = {ProductId: string; Rating: int}
+
+[ApiController]
+[Route("[controller]")]
+type ProductsController(productService: IProductService) =
+    inherit ControllerBase()
+
+    [<HttpGet>]
+    // public async Task<ActionResult> GetList(int page = 1, int limit = 20)
+    member this.GetList(page = 1, limit = 20) : Task<IActionResult> =
+#if FSHARP6
+        task{
+            let! result = productService.GetProducts(page, limit);
+            return this.Ok(result) :> IActionResult;
         }
-
-        private readonly IProductService _productService;
-
-        [HttpGet]
-        public async Task<ActionResult> GetList(int page = 1, int limit = 20)
-        {
-            var result = await _productService.GetProducts(page, limit);
-            return Ok(result);
+#else
+        async {
+            let! result = productService.GetProducts(page,limit);
+            return this.Ok(result) :> IActionResult
         }
+        |> Async.StartAsTask
+#endif
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult> GetSingle(string id)
-        {
-            var result = await _productService.GetSingle(id);
-            return Ok(result);
+    [<HttpGet("{id}")>]
+    // public async Task<ActionResult> GetSingle(string id)
+    member this.GetSingle(id: string) =
+#if FSHARP6
+        task{
+            let! result = productService.GetSingle(id);
+            return this.Ok(result) :> IActionResult;
         }
+#else
+        async {
+            let! result = Async.AwaitTask(productService.GetSingle(id));
+            return this.Ok(result) :> IActionResult;
+        }
+        |> Async.StartAsTask
+#endif
 
-        [HttpPatch]
-        public async Task<ActionResult> Patch(RatingRequest request)
-        {
-            await _productService.AddRating(request.ProductId, request.Rating);
-            return Ok();
+    [<HttpPatch>]
+    // public async Task<ActionResult> Patch(RatingRequest request)
+    member this.Patch(request:RatingRequest): IActionResult =
+#if FSHARP6
+        task{
+            do! productService.AddRating(request.ProductId, request.Rating);
+            return this.Ok() :> IActionResult;
         }
-
-        public class RatingRequest
-        {
-            public string ProductId { get; set; }
-            public int Rating { get; set; }
+#else
+        async {
+            do! Async.AwaitTask(productService.AddRating(request.ProductId, request.Rating));
+            return Ok() :> IActionResult;
         }
-    }
-}
+        |> Async.StartAsTask
+#endif

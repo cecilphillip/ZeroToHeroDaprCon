@@ -1,27 +1,24 @@
-﻿using System;
-using System.Text.Json.Serialization;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+﻿namespace ContosoCrafts.ProductsApi.Models
 
-namespace ContosoCrafts.ProductsApi.Models
-{
-    public class Product
-    {
-        [BsonId]
-        [BsonElement("_id")]
-        [JsonIgnore]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string RecId { get; set; }
+open System;
+open System.Text.Json.Serialization;
+open MongoDB.Bson;
+open MongoDB.Bson.Serialization.Attributes;
 
-        [BsonRepresentation(BsonType.String)]
-        [BsonElement("Id")]
-        [JsonPropertyName("Id")]
-        public string ProductId { get; set; }
-        public string Maker { get; set; }
-        public string Image { get; set; }
-        public string Url { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public int[] Ratings { get; set; }
-    }
-}
+type Product() =
+    [<BsonId>]
+    [<BsonElement("_id")>]
+    [<JsonIgnore>]
+    [<BsonRepresentation(BsonType.ObjectId)>]
+    member val RecId = null with get,set
+
+    [<BsonRepresentation(BsonType.String)>]
+    [<BsonElement("Id")>]
+    [<JsonPropertyName("Id")>]
+    member val ProductId : string = null with get,set
+    member val Maker : string = null with get,set
+    member val Image : string = null with get,set
+    member val Url : string = null with get,set
+    member val Title : string = null with get,set
+    member val Description : string = null with get,set
+    member val Ratings : int[] = null with get,set
