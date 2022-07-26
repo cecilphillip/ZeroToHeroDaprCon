@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Controllers\DaprController.fs" />
+    <Compile Include="Startup.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="CloudNative.CloudEvents.AspNetCore" Version="2.1.1" />
     <PackageReference Include="CloudNative.CloudEvents.SystemTextJson" Version="2.1.1" />
   </ItemGroup>
