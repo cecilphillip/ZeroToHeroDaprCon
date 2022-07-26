@@ -29,6 +29,8 @@ type DaprController(logger: ILogger<DaprController>) =
         if LocalControllerSettings.useFSharpList then
             upcast this.Ok(payload)
         else
+            // ResizeArray is an F# alias for C#'s normal list
+            // System.Collections.Generic.List<T>
             upcast this.Ok(ResizeArray(payload))
 
     [<HttpPost("/checkout")>]
