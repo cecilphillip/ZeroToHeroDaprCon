@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContosoCrafts.WebSite", "Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContosoCrafts.ProductsApi", "ContosoCrafts.ProductsApi\ContosoCrafts.ProductsApi.csproj", "{E163AB58-D72F-40C1-A7BE-2FE75F57B01F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContosoCrafts.CheckoutProcessor", "ContosoCrafts.CheckoutProcessor\ContosoCrafts.CheckoutProcessor.csproj", "{54F6535F-C99B-4DC6-B61B-863ABB67EEFC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContosoCrafts.CheckoutProcessor", "ContosoCrafts.CheckoutProcessor\ContosoCrafts.CheckoutProcessor.fsproj", "{54F6535F-C99B-4DC6-B61B-863ABB67EEFC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
-using CloudNative.CloudEvents;
-using CloudNative.CloudEvents.AspNetCore;
-using CloudNative.CloudEvents.SystemTextJson;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿open System.Threading.Tasks;
+open CloudNative.CloudEvents;
+open CloudNative.CloudEvents.AspNetCore;
+open CloudNative.CloudEvents.SystemTextJson;
+open Microsoft.AspNetCore.Mvc;
+open Microsoft.Extensions.Logging;
 
 namespace ContosoCrafts.CheckoutProcessor.Controllers
 {
