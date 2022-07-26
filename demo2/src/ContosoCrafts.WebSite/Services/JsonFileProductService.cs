@@ -37,16 +37,17 @@ namespace ContosoCrafts.WebSite.Services
         public async Task AddRating(string productId, int rating)
         {
             var products = await GetProducts();
+            var p = products.First(x => x.Id == productId);
 
-            if (products.First(x => x.Id == productId).Ratings == null)
+            if (p.Ratings == null)
             {
-                products.First(x => x.Id == productId).Ratings = new int[] { rating };
+                p.Ratings = new int[] { rating };
             }
             else
             {
-                var ratings = products.First(x => x.Id == productId).Ratings.ToList();
+                var ratings = p.Ratings.ToList();
                 ratings.Add(rating);
-                products.First(x => x.Id == productId).Ratings = ratings.ToArray();
+                p.Ratings = ratings.ToArray();
             }
 
             using var outputStream = File.OpenWrite(JsonFileName);

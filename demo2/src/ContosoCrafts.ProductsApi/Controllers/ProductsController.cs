@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
-using ContosoCrafts.ProductsApi.Services;
+
 using Microsoft.AspNetCore.Mvc;
+
+using ContosoCrafts.ProductsApi.Services;
 
 namespace ContosoCrafts.ProductsApi.Controllers
 {
