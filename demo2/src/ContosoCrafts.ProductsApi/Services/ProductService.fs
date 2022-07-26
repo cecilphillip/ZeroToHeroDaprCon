@@ -36,7 +36,7 @@ type ProductService (mongo:IMongoClient) =
         task{
             let collection = database.GetCollection<Product>(COLLECTION_NAME);
             let filter = Builders<Product>.Filter.Eq((fun x -> x.ProductId), productId);
-            let update = Builders<Product>.Update.Push((fun x -> x.Ratings), rating);
+            let update = Builders<Product>.Update.Push((fun x -> x.Ratings |> Seq.ofArray), rating);
             let! result = Async.AwaitTask(collection.UpdateOneAsync(filter, update));
             ()
         }
@@ -67,7 +67,7 @@ type ProductService (mongo:IMongoClient) =
                     .Limit(Convert.ToInt32(pagingInfo.Limit))
 
             let! results = query.ToListAsync();
-            return results;
+            return results :> IEnumerable<_>;
         }
     #else
         async {
