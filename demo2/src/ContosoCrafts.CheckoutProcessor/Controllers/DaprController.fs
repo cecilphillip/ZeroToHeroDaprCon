@@ -39,11 +39,11 @@ type DaprController(logger: ILogger<DaprController>) =
     member this.CheckoutOrder(): Task<ActionResult> =
 #if FSHARP6
         task {
-        let jsonFormatter = new JsonEventFormatter();
-        let! cloudEvent = this.Request.ToCloudEventAsync(jsonFormatter);
-        logger.LogDebug($"Cloud event {cloudEvent.Id} {cloudEvent.Type} {cloudEvent.DataContentType}");
-        logger.LogInformation("Order received...");
-        return this.Ok() :> ActionResult;
+            let jsonFormatter = new JsonEventFormatter();
+            let! cloudEvent = this.Request.ToCloudEventAsync(jsonFormatter);
+            logger.LogDebug($"Cloud event {cloudEvent.Id} {cloudEvent.Type} {cloudEvent.DataContentType}");
+            logger.LogInformation("Order received...");
+            return this.Ok() :> ActionResult;
         }
 #else
         async {
