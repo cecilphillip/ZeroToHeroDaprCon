@@ -5,11 +5,13 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Components;
+using EventAggregator.Blazor;
+
 using ContosoCrafts.WebSite.Events;
 using ContosoCrafts.WebSite.Models;
 using ContosoCrafts.WebSite.Services;
-using EventAggregator.Blazor;
-using Microsoft.AspNetCore.Components;
 
 namespace ContosoCrafts.WebSite.Components
 {

@@ -1,8 +1,11 @@
 # ContosoCrafts - DaprCon Demo
+
 This sample shows a more in-depth setup for integrating Dapr into an existing application. It includes a variety of [#Infrastructure-Components], and also uses docker-compose to orchestrate every thing locally.
 
 ## Requirements
-You'll need to have the follow installed to propperly run the demo.
+
+You'll need to have the follow installed to properly run the demo.
+
 - [Docker](https://www.docker.com/get-started)
 - [Visual Studio Code](https://code.visualstudio.com/Download)
 - [.NET Core SDK](https://dotnet.microsoft.com/download)
@@ -14,6 +17,7 @@ First, spin up the supporting [#Infrastructure-Components]. Run these commands i
 ```bash
 > docker-compose -f docker-compose-infra.yml up -d
 ```
+
 > A temporary folder named **contoso_temp** will be created in the root directory of the project as a storage location for these components.
 
 Next, launch the application containers and sidecars.
@@ -25,6 +29,7 @@ Next, launch the application containers and sidecars.
 ## What's in the box
 
 ### Application Services
+
 Service   | Role(s) | Exposed local ports
 ----------|---------|----------------------------------------
 [Contoso Website](src/ContosoCrafts.WebSite) | Store front Web UI | 80
@@ -32,7 +37,8 @@ Service   | Role(s) | Exposed local ports
 [Checkout Processor](src/ContosoCrafts.CheckoutProcessor) | Subscribes and processes pub/sub messages |
 
 ### Infrastructure Components
-The following components have been configuired to support some of the various [Dapr building blocks](https://docs.dapr.io/developing-applications/building-blocks/) and logging senarios.
+
+The following components have been configured to support some of the various [Dapr building blocks](https://docs.dapr.io/developing-applications/building-blocks/) and logging scenarios.
 
 Component | Role(s) | Exposed local ports
 ----------|---------|----------------------------------------

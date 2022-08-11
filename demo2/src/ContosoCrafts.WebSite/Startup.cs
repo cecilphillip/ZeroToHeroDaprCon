@@ -1,9 +1,12 @@
 using System;
-using ContosoCrafts.WebSite.Services;
-using EventAggregator.Blazor;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
+using EventAggregator.Blazor;
+
+using ContosoCrafts.WebSite.Services;
 
 namespace ContosoCrafts.WebSite
 {

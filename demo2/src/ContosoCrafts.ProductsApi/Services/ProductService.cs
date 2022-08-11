@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ContosoCrafts.ProductsApi.Models;
+
 using MongoDB.Bson;
 using MongoDB.Driver;
+
+using ContosoCrafts.ProductsApi.Models;
 
 namespace ContosoCrafts.ProductsApi.Services
 {
@@ -19,6 +21,7 @@ namespace ContosoCrafts.ProductsApi.Services
             this._mongo = mongo;
             this._database = this._mongo.GetDatabase(DATABASE_NAME);
         }
+
         public async Task AddRating(string productId, int rating)
         {
             var collection = this._database.GetCollection<Product>(COLLECTION_NAME);

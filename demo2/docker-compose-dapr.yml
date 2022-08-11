@@ -35,7 +35,7 @@ services:
         "/dapr/local",
       ]
     volumes:
-      - "./components:/dapr"      
+      - "./components:/dapr"
     depends_on:
       - website
     network_mode: "service:website"
@@ -102,7 +102,7 @@ services:
       ]
     volumes:
       - "./components:/dapr"
-    depends_on:      
+    depends_on:
       - checkoutprocessor
     env_file:
       - .env
