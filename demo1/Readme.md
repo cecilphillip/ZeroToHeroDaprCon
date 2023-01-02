@@ -32,7 +32,7 @@ Run the following commands to upgrade pip and install FastAI
 
 ### Running the application using the Dapr CLI
 ```bash
-dapr run --app-id api --app-port 8000 dapr-http-port 3500 python main.py
+dapr run --app-id api --app-port 8000 --dapr-http-port 3500 python main.py
 ```
 
 ### Making API requests
